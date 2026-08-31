@@ -1,0 +1,7 @@
+<?php /*if floatval(get_bloginfo( 'version' )) >= floatval('4.1'): 
+the_posts_pagination();
+else:
+echo paginate_links();
+endif*/
+?>
+

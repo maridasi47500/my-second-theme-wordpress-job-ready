@@ -1,0 +1,10 @@
+h2 {
+	color: green;
+}
+h1 {
+	color: red; 
+}
+p, article {
+	background: black; 
+	color: white;
+}

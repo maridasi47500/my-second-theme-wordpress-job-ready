@@ -1,0 +1,403 @@
+<?php
+add_theme_support( 'post-thumbnails' );
+//include '../../plugins/musician/musician.php';
+//add_action('after_setup_theme', 'wpdocs_theme_setup');
+//add_action( 'init', 'wporg_register_taxonomy_musician' );
+if ( ! isset ( $content_width) ) {
+    $content_width = 800;
+}
+
+$args = array(
+    'default-color' => '0000ff',
+    'default-image' => get_theme_file_uri( 'assets/img/terremusique.png' ) ,
+);
+add_theme_support( 'custom-background', $args );
+add_action( 'after_setup_theme', 'theme_slug_setup' );
+
+function theme_slug_setup() {
+	add_editor_style( get_stylesheet_uri() );
+}
+
+//function themename_custom_header_setup() {
+	$defaults = array(
+		// Default Header Image to display.
+		'default-image'          => get_theme_file_uri('assets/img/sky.png'),
+		// Display the header text along with the image.
+		'header-text'            => false,
+		// Header text color default.
+		'default-text-color'     => '000',
+		// Header image width (in pixels).
+		'width'                  => 1000,
+		// Header image height (in pixels).
+		'height'                 => 198,
+		// Header image random rotation default.
+		'random-default'         => false,
+		// Enable upload of image file in admin.
+		'uploads'                => false,
+		// Function to be called in theme head section.
+		//'wp-head-callback'       => 'wphead_cb',
+		// Function to be called in preview page head section.
+		//'admin-head-callback'    => 'adminhead_cb',
+		// Function to produce preview markup in the admin screen.
+		//'admin-preview-callback' => 'adminpreview_cb',
+	);
+//add_theme_support( 'custom-header' );
+
+global $wp_version;
+if ( version_compare( $wp_version, '3.4', '>=' ) ) :
+        add_theme_support( 'custom-header', $defaults );
+else :
+	add_custom_image_header( $wp_head_callback, $admin_head_callback );
+endif;
+function themename_custom_logo_setup() {
+	$defaults = array(
+		'height'               => 100,
+		'width'                => 400,
+		'flex-height'          => true,
+		'flex-width'           => true,
+		'header-text'          => array( 'site-title', 'site-description' ),
+		'unlink-homepage-logo' => true,
+	);
+	add_theme_support( 'custom-logo', $defaults );
+}
+add_action( 'after_setup_theme', 'themename_custom_logo_setup' );
+the_post_thumbnail( 'thumbnail', array( 'class' => 'alignleft' ) );
+function register_my_menus() {
+  register_nav_menus(
+    array(
+      'header-menu' => __( 'Header Menu' ),
+      'extra-menu' => __( 'Extra Menu' )
+     )
+   );
+ }
+ add_action( 'init', 'register_my_menus' );
+//}
+//add_action( 'after_setup_theme', 'themename_custom_header_setup' );
+/**
+ * MyFirstTheme's functions and definitions
+ *
+ * @package MyFirstTheme
+ * @since MyFirstTheme 1.0
+ */
+
+/**
+ * First, let's set the maximum content width based on the theme's
+ * design and stylesheet.
+ * This will limit the width of all uploaded images and embeds.
+ */
+if ( ! isset( $content_width ) ) {
+	$content_width = 800; /* pixels */
+}
+
+
+if ( ! function_exists( 'myfirsttheme_setup' ) ) :
+
+	/**
+	 * Sets up theme defaults and registers support for various
+	 * WordPress features.
+	 *
+	 * Note that this function is hooked into the after_setup_theme
+	 * hook, which runs before the init hook. The init hook is too late
+	 * for some features, such as indicating support post thumbnails.
+	 */
+	function myfirsttheme_setup() {
+
+		/**
+		 * Make theme available for translation.
+		 * Translations can be placed in the /languages/ directory.
+		 */
+		load_theme_textdomain( 'myfirsttheme', get_template_directory() . '/languages' );
+
+		/**
+		 * Add default posts and comments RSS feed links to <head>.
+		 */
+		add_theme_support( 'automatic-feed-links' );
+
+		/**
+		 * Enable support for post thumbnails and featured images.
+		 */
+		add_theme_support( 'post-thumbnails' );
+
+		/**
+		 * Add support for two custom navigation menus.
+		 */
+		register_nav_menus( array(
+			'primary'   => __( 'Primary Menu', 'myfirsttheme' ),
+			'secondary' => __( 'Secondary Menu', 'myfirsttheme' ),
+		) );
+
+		/**
+		 * Enable support for the following post formats:
+		 * aside, gallery, quote, image, and video
+		 */
+		add_theme_support( 'post-formats', array( 'aside', 'gallery', 'quote', 'image', 'video', 'musician' ) );
+	}
+endif; // myfirsttheme_setup
+add_action( 'after_setup_theme', 'myfirsttheme_setup' );
+
+
+
+/**
+ * Load translations for wpdocs_theme
+ */
+//function wpdocs_theme_setup(){
+//    load_theme_textdomain('wpdocs_theme', get_template_directory() . '/languages');
+//}
+//function musician_role_template( $templates = '' ) {
+//	$musician = get_queried_object();
+//	$role   = $musician->roles[0];
+//
+//	if ( ! is_array( $templates ) && ! empty( $templates ) ) {
+//		$templates = locate_template( array( "musician-$role.php", $templates ), false );
+//	} elseif ( empty( $templates ) ) {
+//		$templates = locate_template( "musician-$role.php", false );
+//	} else {
+//		$new_template = locate_template( array( "musician-$role.php" ) );
+//
+//		if ( ! empty( $new_template ) ) {
+//			array_unshift( $templates, $new_template );
+//		}
+//	}
+//	return $templates;
+//}
+//add_filter( 'musician_template', 'musician_role_template' );
+add_action( 'widgets_init', 'my_register_sidebars' );
+function my_register_sidebars() {
+	/* Register the 'primary' sidebar. */
+	register_sidebar(
+		array(
+			'id'            => 'primary',
+			'name'          => __( 'Primary Sidebar' ),
+			'description'   => __( 'A short description of the sidebar.' ),
+			'before_widget' => '<div id="%1$s" class="widget %2$s">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h3 class="widget-title">',
+			'after_title'   => '</h3>',
+		)
+	);
+	/* Repeat register_sidebar() code for additional sidebars. */
+}
+function myErrorHandler($errno, $errstr, $errfile, $errline)
+{
+    if (!(error_reporting() & $errno)) {
+        // This error code is not included in error_reporting, so let it fall
+        // through to the standard PHP error handler
+        return false;
+    }
+
+    switch ($errno) {
+    case E_USER_ERROR:
+        echo "<p class=\"someerror\"><b>My ERROR</b> [$errno] $errstr<br />\n";
+        echo "  Fatal error on line $errline in file $errfile";
+        echo ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
+        echo "Aborting...<br />\n</p>";
+        exit(1);
+        break;
+
+    case E_USER_WARNING:
+        echo "<p class=\"someerror\"><b>My WARNING</b> [$errno] $errstr<br /></p>\n";
+        break;
+
+    case E_USER_NOTICE:
+        echo "<p class=\"someerror\"><b>My NOTICE</b> [$errno] $errstr<br /></p>\n";
+        break;
+
+    default:
+        echo "<p class=\"someerror\">Unknown error type: [$errno] $errstr<br /></p>\n";
+        echo "  <p class=\"someerror\">Fatal error on line $errline in file $errfile</p>";
+        break;
+    }
+
+    /* Don't execute PHP internal error handler */
+    return true;
+}
+
+// function to test the error handling
+function scale_by_log($vect, $scale)
+{
+    if (!is_numeric($scale) || $scale <= 0) {
+        trigger_error("log(x) for x <= 0 is undefined, you used: scale = $scale", E_USER_ERROR);
+    }
+
+    if (!is_array($vect)) {
+        trigger_error("Incorrect input vector, array of values expected", E_USER_WARNING);
+        return null;
+    }
+
+    $temp = array();
+    foreach($vect as $pos => $value) {
+        if (!is_numeric($value)) {
+            trigger_error("Value at position $pos is not a number, using 0 (zero)", E_USER_NOTICE);
+            $value = 0;
+        }
+        $temp[$pos] = log($scale) * $value;
+    }
+
+    return $temp;
+}
+
+// set to the user defined error handler
+$old_error_handler = set_error_handler("myErrorHandler");
+function wpdocs_register_widgets() {
+	register_widget( 'My_Widget' );
+}
+
+add_action( 'widgets_init', 'wpdocs_register_widgets' );
+
+add_action('customize_register','my_customize_register');
+function my_customize_register( $wp_customize ) {
+  $wp_customize->add_panel("hey");
+  //$wp_customize->get_panel("hey");
+  //$wp_customize->remove_panel();
+
+  $wp_customize->add_section("yes");
+  //$wp_customize->get_section();
+  //$wp_customize->remove_section();
+
+  //$wp_customize->add_setting();
+  //$wp_customize->get_setting();
+  //$wp_customize->remove_setting();
+  $wp_customize->add_setting( 'setting_id', array(
+  'type' => 'theme_mod', // or 'option'
+  'capability' => 'edit_theme_options',
+  'theme_supports' => '', // Rarely needed.
+  'default' => '',
+  'transport' => 'refresh', // or postMessage
+  'sanitize_callback' => '',
+  'sanitize_js_callback' => '', // Basically to_json.
+) );
+  $wp_customize->add_setting( 'accent_color', array(
+  'default' => '#f72525',
+  'sanitize_callback' => 'sanitize_hex_color',
+) );
+  $wp_customize->add_setting( 'myplugin_options[color]', array(
+  'type' => 'option',
+  'capability' => 'manage_options',
+  'default' => '#ff2525',
+  'sanitize_callback' => 'sanitize_hex_color',
+) );
+  $wp_customize->add_control( 'setting_id', array(
+  'type' => 'date',
+  'priority' => 10, // Within the section.
+  'section' => 'colors', // Required, core or custom.
+  'label' => __( 'Date' ),
+  //'description' => __( 'This is a date control with a red border.' ),
+  'input_attrs' => array(
+    'class' => 'my-custom-class-for-js',
+    'style' => 'border: 1px solid #900',
+    'placeholder' => __( 'mm/dd/yyyy' ),
+  ),
+  'active_callback' => 'is_front_page',
+) );
+  $wp_customize->add_control( 'custom_theme_css', array(
+  'label' => __( 'Custom Theme CSS' ),
+  'type' => 'textarea',
+  'section' => 'custom_css',
+) );
+  $wp_customize->add_control( 'setting_id', array(
+  'type' => 'range',
+  'section' => 'title_tagline',
+  'label' => __( 'Range' ),
+  //'description' => __( 'This is the range control description.' ),
+  'input_attrs' => array(
+    'min' => 0,
+    'max' => 10,
+    'step' => 2,
+  ),
+) );
+  $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'color_control', array(
+  'label' => __( 'Accent Color', 'theme_textdomain' ),
+  'section' => 'media',
+) ) );
+  $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'image_control', array(
+  'label' => __( 'Featured Home Page Image', 'theme_textdomain' ),
+  'section' => 'media',
+  'mime_type' => 'image',
+) ) );
+  $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'audio_control', array(
+  'label' => __( 'Featured Home Page Recording', 'theme_textdomain' ),
+  'section' => 'media',
+  'mime_type' => 'audio',
+) ) );
+  $wp_customize->add_section( 'custom_css', array(
+  'title' => __( 'Custom CSS' ),
+  //'description' => __( 'Add custom CSS here' ),
+  'panel' => '', // Not typically needed.
+  'priority' => 160,
+  'capability' => 'edit_theme_options',
+  'theme_supports' => '', // Rarely needed.
+) );
+  // Add a footer/copyright information section.
+  $wp_customize->add_section( 'footer' , array(
+    'title' => __( 'Footer', 'themename' ),
+    'priority' => 105, // Before Widgets.
+  ) );
+  $wp_customize->add_panel( 'menus', array(
+    'title' => __( 'Menus' ),
+    //'description' => $description, // Include html tags such as <p>.
+    'priority' => 160, // Mixed with top-level-section hierarchy.
+  ) );
+  $section_id=1;
+  $wp_customize->add_section( $section_id , array(
+  'title' => "haha",//$menu->name,
+  'panel' => 'menus',
+) );
+
+  //$wp_customize->add_control();
+  //$wp_customize->get_control();
+  //$wp_customize->remove_control();
+  $nav_menu_setting_id="yoohoo";
+  $nav_menu_setting_id=1;
+  $item_ids=[1,2];
+//  $wp_customize->add_setting( $nav_menu_setting_id, array(
+//  'type' => 'nav_menu',
+//  'default' => $item_ids,
+//) );
+  $wp_customize->add_control(
+  new WP_Customize_Color_Control(
+    $wp_customize, // WP_Customize_Manager
+    'accent_color', // Setting id
+    array( // Args, including any custom ones.
+      'label' => __( 'Accent Color' ),
+      'section' => 'colors',
+    )
+  )
+);
+}
+function my_custom_css_output() {
+  echo '<style type="text/css" id="custom-theme-css">' .
+  get_theme_mod( 'custom_theme_css', '' ) . '</style>';
+  echo '<style type="text/css" id="custom-plugin-css">' .
+  get_option( 'custom_plugin_css', '' ) . '</style>';
+}
+add_action( 'wp_head', 'my_custom_css_output');
+
+function menu_customizer_update_nav_menu( $value, $setting ) {
+  $menu_id = str_replace( 'nav_menu_', '', $setting->id );
+  // ...
+  $i = 0;
+  foreach( $value as $item_id ) { // $value is ordered array of item ids.
+    menu_customizer_update_menu_item_order( $menu_id, $item_id, $i );
+  $i++;
+  }
+}
+add_action( 'customize_update_nav_menu', 'menu_customizer_update_nav_menu', 10, 2 );
+function menu_customizer_preview_nav_menu( $setting ) {
+  $menu_id = str_replace( 'nav_menu_', '', $setting->id );
+  add_filter( 'wp_get_nav_menu_items', function( $items, $menu, $args ) use ( $menu_id, $setting ) {
+    $preview_menu_id = $menu->term_id;
+    if ( $menu_id == $preview_menu_id ) {
+      $new_ids = $setting->post_value();
+      foreach ( $new_ids as $item_id ) {
+        $item = wp_setup_nav_menu_item( $item );
+        $item->menu_order = $i;
+        $new_items[] = $item;
+        $i++;
+      }
+      return $new_items;
+    } else {
+      return $items;
+    }
+  }, 10, 3 );
+}
+add_action( 'customize_preview_nav_menu', 'menu_customizer_preview_nav_menu', 10, 2 );
