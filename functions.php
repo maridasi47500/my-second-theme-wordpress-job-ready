@@ -401,3 +401,15 @@ function menu_customizer_preview_nav_menu( $setting ) {
   }, 10, 3 );
 }
 add_action( 'customize_preview_nav_menu', 'menu_customizer_preview_nav_menu', 10, 2 );
+add_filter('the_content', 'wp_add_something_to_content');
+function wp_add_something_to_content ($content) {
+	$add_content="<p>hello ! how are you doing ? content of the article just right here :</p>";
+	$somecontent = $add_content . $content;
+	return $somecontent;
+}
+add_filter('get_the_excerpt', 'wp_add_something_to_excerpt');
+function wp_add_something_to_excerpt ($content) {
+	$add_content="<p>in a few words :</p>";
+	$content = $add_content . $content;
+	return $content;
+}
