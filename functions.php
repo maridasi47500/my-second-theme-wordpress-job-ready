@@ -161,22 +161,22 @@ add_action( 'after_setup_theme', 'myfirsttheme_setup' );
 //	return $templates;
 //}
 //add_filter( 'musician_template', 'musician_role_template' );
-add_action( 'widgets_init', 'my_register_sidebars' );
-function my_register_sidebars() {
-	/* Register the 'primary' sidebar. */
-	register_sidebar(
-		array(
-			'id'            => 'primary',
-			'name'          => __( 'Primary Sidebar' ),
-			'description'   => __( 'A short description of the sidebar.' ),
-			'before_widget' => '<div id="%1$s" class="widget %2$s">',
-			'after_widget'  => '</div>',
-			'before_title'  => '<h3 class="widget-title">',
-			'after_title'   => '</h3>',
-		)
-	);
-	/* Repeat register_sidebar() code for additional sidebars. */
-}
+//add_action( 'widgets_init', 'my_register_sidebars' );
+//function my_register_sidebars() {
+//	/* Register the 'primary' sidebar. */
+//	register_sidebar(
+//		array(
+//			'id'            => 'primary',
+//			'name'          => __( 'Primary Sidebar' ),
+//			'description'   => __( 'A short description of the sidebar.' ),
+//			'before_widget' => '<div id="%1$s" class="widget %2$s">',
+//			'after_widget'  => '</div>',
+//			'before_title'  => '<h3 class="widget-title">',
+//			'after_title'   => '</h3>',
+//		)
+//	);
+//	/* Repeat register_sidebar() code for additional sidebars. */
+//}
 function myErrorHandler($errno, $errstr, $errfile, $errline)
 {
     if (!(error_reporting() & $errno)) {
@@ -238,11 +238,11 @@ function scale_by_log($vect, $scale)
 
 // set to the user defined error handler
 $old_error_handler = set_error_handler("myErrorHandler");
-function wpdocs_register_widgets() {
-	register_widget( 'My_Widget' );
-}
-
-add_action( 'widgets_init', 'wpdocs_register_widgets' );
+//function wpdocs_register_widgets() {
+//	register_widget( 'My_Widget' );
+//}
+//
+//add_action( 'widgets_init', 'wpdocs_register_widgets' );
 
 add_action('customize_register','my_customize_register');
 function my_customize_register( $wp_customize ) {
@@ -413,3 +413,11 @@ function wp_add_something_to_excerpt ($content) {
 	$content = $add_content . $content;
 	return $content;
 }
+function allow_users_who_can_edit_posts_to_customize( $caps, $cap, $user_id ) {
+	$required_cap = 'edit_posts';
+	if ( 'customize' === $cap && user_can( $user_id, $required_cap ) ) {
+		$caps = array( $required_cap );
+	}
+	return $caps;
+}
+add_filter( 'map_meta_cap', 'allow_users_who_can_edit_posts_to_customize', 10, 3 );

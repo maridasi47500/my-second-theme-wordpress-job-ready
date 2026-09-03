@@ -1,6 +1,14 @@
 
 
-<?php get_header() ?>
+<?php
+if ( is_front_page() ) :
+        get_header( 'home' );
+elseif ( is_page( 'About' ) ) :
+        get_header( 'about' );
+else:
+        get_header();
+endif;?>
+
 <h1><?php bloginfo( 'name' ); ?></h1>
 
 <h3>version : <?php bloginfo( 'version' ); ?></h3>
