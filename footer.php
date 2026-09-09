@@ -5,7 +5,25 @@
 <?php get_sidebar(); ?>
 <?php wp_list_categories(); ?>
 <div class="widget-section">
-	<?php the_widget( 'My_Widget_Class' ); ?>
+widget here : 
+	<?php 
+$instance = array();
+echo $_GET['title'];
+echo $_GET['text'];
+$instance['title'] = $_GET['title'];
+$instance['text'] = $_GET['text'];
+                if ( empty( $instance['title']) ) {
+$instance['title'] = "hello";
+}
+                if ( empty( $instance['text'] )) {
+
+$instance['text'] = "how are you today";
+}
+#$args = array();
+#$args['title'] = 'sample';
+#$args['text'] = 'text';
+
+the_widget( 'WPDocs_New_Widget', $instance, $args ); ?>
 </div><!-- .widget-section -->
 <div>
 <?php 

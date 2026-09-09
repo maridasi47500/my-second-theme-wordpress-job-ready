@@ -238,11 +238,17 @@ function scale_by_log($vect, $scale)
 
 // set to the user defined error handler
 $old_error_handler = set_error_handler("myErrorHandler");
-//function wpdocs_register_widgets() {
-//	register_widget( 'My_Widget' );
-//}
-//
-//add_action( 'widgets_init', 'wpdocs_register_widgets' );
+
+
+/**
+ * Register the new widget.
+ *
+ * @see 'widgets_init'
+ */
+function wpdocs_register_widgets() {
+        register_widget( 'WPDocs_New_Widget' );
+}
+
 
 add_action('customize_register','my_customize_register');
 function my_customize_register( $wp_customize ) {
@@ -421,3 +427,20 @@ function allow_users_who_can_edit_posts_to_customize( $caps, $cap, $user_id ) {
 	return $caps;
 }
 add_filter( 'map_meta_cap', 'allow_users_who_can_edit_posts_to_customize', 10, 3 );
+/**
+ * Adds a privacy policy statement.
+ */
+function wporg_add_privacy_policy_content() {
+	if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+		return;
+	}
+	$content = '<p class="privacy-policy-tutorial">' . __( 'Some introductory content for the suggested text.', 'text-domain' ) . '</p>'
+			. '<strong class="privacy-policy-tutorial">' . __( 'Suggested Text:', 'my_plugin_textdomain' ) . '</strong> '
+			. sprintf(
+				__( 'When you leave a comment on this site, we send your name, email address, IP address and comment text to example.com. Example.com does not retain your personal data. The example.com privacy policy is <a href="%1$s" target="_blank">here</a>.', 'text-domain' ),
+				'https://example.com/privacy-policy'
+			);
+	wp_add_privacy_policy_content( 'Example Plugin', wp_kses_post( wpautop( $content, false ) ) );
+}
+
+add_action( 'admin_init', 'wporg_add_privacy_policy_content' );
