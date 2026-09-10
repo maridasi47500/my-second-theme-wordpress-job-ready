@@ -8,22 +8,24 @@
 widget here : 
 	<?php 
 $instance = array();
-echo $_GET['title'];
-echo $_GET['text'];
-$instance['title'] = $_GET['title'];
-$instance['text'] = $_GET['text'];
-                if ( empty( $instance['title']) ) {
+                if ( empty( $_GET['title'])  ) {
 $instance['title'] = "hello";
-}
-                if ( empty( $instance['text'] )) {
+		} else {
+$instance['title'] = $_GET['title'];
+		}
+
+
+                if ( empty( $_GET['text'] )) {
 
 $instance['text'] = "how are you today";
-}
+		} else {
+$instance['text'] = $_GET['text'];
+		}
 #$args = array();
 #$args['title'] = 'sample';
 #$args['text'] = 'text';
 
-the_widget( 'WPDocs_New_Widget', $instance, $args ); ?>
+the_widget( 'WPDocs_New_Widget', $instance ); ?>
 </div><!-- .widget-section -->
 <div>
 <?php 

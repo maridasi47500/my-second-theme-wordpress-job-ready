@@ -285,7 +285,7 @@ function my_customize_register( $wp_customize ) {
   'section' => 'colors',
 ) ) );
   $wp_customize->add_section( 'media', array(
-  'title' => __( 'Media' ),
+  'title' => __( 'Media', 'my-second-theme' ),
   'description' => __( '' ),
   'panel' => '', // Not typically needed.
   'priority' => 160,
@@ -316,32 +316,44 @@ function my_customize_register( $wp_customize ) {
   'active_callback' => 'is_front_page',
 ) );
   $wp_customize->add_control( 'custom_theme_css', array(
-  'label' => __( 'Custom Theme CSS' ),
+  'label' => __( 'Custom Theme CSS', "my-second-theme" ),
   'type' => 'textarea',
   'section' => 'custom_css',
 ) );
-  $wp_customize->add_control( 'setting_id', array(
-  'type' => 'range',
+  $wp_customize->add_setting( 'taille_du_titre', array(
+   // or 'option'
+  'type' => 'theme_mod',
+  'capability' => 'edit_theme_options',
+) );
+  $wp_customize->add_control( 'taille_du_titre', array(
+  'type' => 'number',
   'section' => 'title_tagline',
-  'label' => __( 'Range' ),
+  'label' => __( 'Taille du titre' ),
   //'description' => __( 'This is the range control description.' ),
   'input_attrs' => array(
-    'min' => 0,
-    'max' => 10,
+    'min' => 20,
+    'max' => 60,
     'step' => 2,
   ),
 ) );
-  $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'color_control', array(
-  'label' => __( 'Accent Color', 'theme_textdomain' ),
-  'section' => 'media',
+  $wp_customize->add_setting( 'couleur_du_titre', array(
+   // or 'option'
+  'type' => 'theme_mod',
+  'capability' => 'edit_theme_options',
+  'default' => '#000',
+  'sanitize_callback' => 'sanitize_hex_color',
+) );
+  $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'couleur_du_titre', array(
+  'label' => __( 'Couleur du titre', 'my-second-theme' ),
+  'section' => 'colors',
 ) ) );
   $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'image_control', array(
-  'label' => __( 'Featured Home Page Image', 'theme_textdomain' ),
+  'label' => __( 'Featured Home Page Image', 'my-second-theme' ),
   'section' => 'media',
   'mime_type' => 'image',
 ) ) );
   $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'audio_control', array(
-  'label' => __( 'Featured Home Page Recording', 'theme_textdomain' ),
+  'label' => __( 'Featured Home Page Recording', 'my-second-theme' ),
   'section' => 'media',
   'mime_type' => 'audio',
 ) ) );

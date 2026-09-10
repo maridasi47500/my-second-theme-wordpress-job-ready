@@ -15,13 +15,17 @@ body.custom-background {
   background-repeat: repeat;
   background-attachment: scroll;
 }
-h1 {
-     color:<?php echo get_theme_mod( 'accent_color', '#fff' ); ?>;
-}
+
 
 #sidebar, h1, h2, h3, body p, .categories, .wp-block-paragraph, .mypost, #site-header, .menu {
-        background:<?php echo get_theme_mod( 'background_color_block_text', '#fff' ); ?>; color:white;
+        background:<?php echo get_theme_mod( 'background_color_block_text', '#fff' ); ?>; 
+color:white;
 
+
+}
+h1 {
+     color:<?php echo get_theme_mod( 'couleur_du_titre', '#fff' ); ?>;
+        font-size:<?php echo get_theme_mod( 'taille_du_titre', '21' ); ?>px;
 }
 .someerror {
 background: #8B0000;
