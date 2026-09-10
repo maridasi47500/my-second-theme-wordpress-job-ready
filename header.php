@@ -18,6 +18,12 @@ body.custom-background {
   background-repeat: repeat;
   background-attachment: scroll;
 }
+h1 {
+     color:<?php echo get_theme_mod( 'accent_color', '#fff' ); ?>;
+}
+.footer {
+     border-top: solid 1px #<?php echo get_theme_mod( 'background_color', '#fff' ); ?>;
+}
 .mypost {
         background:black; color:white;
 }

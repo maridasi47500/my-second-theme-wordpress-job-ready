@@ -106,7 +106,7 @@ if ( ! function_exists( 'myfirsttheme_setup' ) ) :
 		 * Make theme available for translation.
 		 * Translations can be placed in the /languages/ directory.
 		 */
-		load_theme_textdomain( 'myfirsttheme', get_template_directory() . '/languages' );
+		load_theme_textdomain( 'my-second-theme', get_template_directory() . '/languages' );
 
 		/**
 		 * Add default posts and comments RSS feed links to <head>.
@@ -271,6 +271,26 @@ function my_customize_register( $wp_customize ) {
   'transport' => 'refresh', // or postMessage
   'sanitize_callback' => '',
   'sanitize_js_callback' => '', // Basically to_json.
+) );
+  $wp_customize->add_setting( 'background_color_block_text', array(
+   // or 'option'
+  'type' => 'theme_mod',
+  'capability' => 'edit_theme_options',
+  'default' => '#000',
+  'sanitize_callback' => 'sanitize_hex_color',
+) );
+  $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'background_color_block_text', array(
+  'default' => '#000',
+  'label' => __( 'couleur du fond des blocks text', 'my-second-theme' ),
+  'section' => 'colors',
+) ) );
+  $wp_customize->add_section( 'media', array(
+  'title' => __( 'Media' ),
+  'description' => __( '' ),
+  'panel' => '', // Not typically needed.
+  'priority' => 160,
+  'capability' => 'edit_theme_options',
+  'theme_supports' => '', // Rarely needed.
 ) );
   $wp_customize->add_setting( 'accent_color', array(
   'default' => '#f72525',

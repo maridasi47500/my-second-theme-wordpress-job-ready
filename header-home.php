@@ -15,16 +15,13 @@ body.custom-background {
   background-repeat: repeat;
   background-attachment: scroll;
 }
-.mypost {
-        background:black; color:white;
+h1 {
+     color:<?php echo get_theme_mod( 'accent_color', '#fff' ); ?>;
 }
 
-#sidebar, h1, h2, h3 {
-        background:black; color:white;
+#sidebar, h1, h2, h3, body p, .categories, .wp-block-paragraph, .mypost, #site-header, .menu {
+        background:<?php echo get_theme_mod( 'background_color_block_text', '#fff' ); ?>; color:white;
 
-}
-body p, .categories, .wp-block-paragraph, .mypost, #site-header, .menu {
-        background:black; color:white;
 }
 .someerror {
 background: #8B0000;
