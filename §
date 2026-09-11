@@ -8,8 +8,13 @@
 
         ...
 <style type="text/css" id="custom-background-css">
-
-
+.containerimagepagedaccueil {
+position: relative;
+}
+.imagepagedaccueil {
+position: absolute;
+left:0;top:0;width:100%;
+}
 body.custom-background {
   background-image: url("/wp-content/themes/my-second-theme/assets/img/terremusique.png");
   background-position: left top;
@@ -39,30 +44,6 @@ color:white;
 font-size: 34;
 font-weight:900;
 
-}
-.containerimagepagedaccueil {
-position: relative;
-}
-.imagepagedaccueil {
-position: absolute;
-left:0;top:0;width:100%;
-}
-.texteimagepagedaccueil {
-position: absolute;
-z-index: 30;
-background:transparent;
-width:100%;
-top:80px;
-
-}
-.texteimagepagedaccueil * {
-position:relative; 
-z-index: 30;
-height:100%;
-left:30px;top:50%;width:100%;
-color: white;
-text-align:center;
-background:transparent;
 }
 
 </style>
@@ -104,7 +85,7 @@ echo str_replace("-150x150",null,wp_get_attachment_image_src(get_theme_mod("imag
 }
 	
 ; ?>" data-object-fit="cover"/>
-        <div class="texteimagepagedaccueil wp-block-cover__inner-container">
+        <div class="wp-block-cover__inner-container">
 
                 <!-- wp:heading {"textAlign":"center"} -->
                 <h2 class="wp-block-heading has-text-align-center"><?php esc_html_e( 'Welcome to My Site', 'themeslug' ); ?></h2>

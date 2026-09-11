@@ -251,12 +251,47 @@ function wpdocs_register_widgets() {
 
 
 add_action('customize_register','my_customize_register');
+add_action('customize_register','other_customize_register');
+function other_customize_register( $wp_customize ) {
+  $wp_customize->add_section( 'my_media', array(
+  'title' => __( 'Personnaliser la Home Page' ),
+  //'description' => __( 'Add custom CSS here' ),
+  'description' => __( 'préfére une grande image de la ville de nuit' ),
+  'panel' => '', // Not typically needed.
+  'priority' => 200,
+  'capability' => 'edit_theme_options',
+  'theme_supports' => '', // Rarely needed.
+) );
+  $wp_customize->add_setting( 'image_control', array(
+   // or 'option'
+  'type' => 'theme_mod',
+  'capability' => 'edit_theme_options',
+) );
+  $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'image_control', array(
+  'label' => __( 'Featured Home Page Image Image de la ville /image de héros', 'my-second-theme' ),
+
+  'settings' => 'image_control',
+  'section' => 'my_media',
+  'width' => '300', 'height' => '300',
+  //'mime_type' => 'image',
+) ) );
+  $wp_customize->add_setting( 'custom_media_css', array(
+   // or 'option'
+  'type' => 'theme_mod',
+  'capability' => 'edit_theme_options',
+) );
+  $wp_customize->add_control( 'custom_media_css', array(
+  'label' => __( 'Custom Media CSS', "my-second-theme" ),
+  'type' => 'textarea',
+  'section' => 'my_media',
+) );
+}
 function my_customize_register( $wp_customize ) {
-  $wp_customize->add_panel("hey");
+  //$wp_customize->add_panel("hey");
   //$wp_customize->get_panel("hey");
   //$wp_customize->remove_panel();
 
-  $wp_customize->add_section("yes");
+  //$wp_customize->add_section("yes");
   //$wp_customize->get_section();
   //$wp_customize->remove_section();
 
@@ -284,14 +319,6 @@ function my_customize_register( $wp_customize ) {
   'label' => __( 'couleur du fond des blocks text', 'my-second-theme' ),
   'section' => 'colors',
 ) ) );
-  $wp_customize->add_section( 'media', array(
-  'title' => __( 'Media', 'my-second-theme' ),
-  'description' => __( '' ),
-  'panel' => '', // Not typically needed.
-  'priority' => 160,
-  'capability' => 'edit_theme_options',
-  'theme_supports' => '', // Rarely needed.
-) );
   $wp_customize->add_setting( 'accent_color', array(
   'default' => '#f72525',
   'sanitize_callback' => 'sanitize_hex_color',
@@ -315,6 +342,7 @@ function my_customize_register( $wp_customize ) {
   ),
   'active_callback' => 'is_front_page',
 ) );
+
   $wp_customize->add_control( 'custom_theme_css', array(
   'label' => __( 'Custom Theme CSS', "my-second-theme" ),
   'type' => 'textarea',
@@ -347,18 +375,15 @@ function my_customize_register( $wp_customize ) {
   'label' => __( 'Couleur du titre', 'my-second-theme' ),
   'section' => 'colors',
 ) ) );
-  $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'image_control', array(
-  'label' => __( 'Featured Home Page Image', 'my-second-theme' ),
-  'section' => 'media',
-  'mime_type' => 'image',
-) ) );
+
   $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'audio_control', array(
   'label' => __( 'Featured Home Page Recording', 'my-second-theme' ),
   'section' => 'media',
   'mime_type' => 'audio',
 ) ) );
+
   $wp_customize->add_section( 'custom_css', array(
-  'title' => __( 'Custom CSS' ),
+  'title' => __( 'Awesome Custom CSS' ),
   //'description' => __( 'Add custom CSS here' ),
   'panel' => '', // Not typically needed.
   'priority' => 160,
@@ -367,15 +392,28 @@ function my_customize_register( $wp_customize ) {
 ) );
   // Add a footer/copyright information section.
   $wp_customize->add_section( 'footer' , array(
-    'title' => __( 'Footer', 'themename' ),
+    'title' => __( 'Footer', 'my-second-theme' ),
     'priority' => 105, // Before Widgets.
   ) );
   $wp_customize->add_panel( 'menus', array(
-    'title' => __( 'Menus' ),
+    'title' => __( 'Awesome Menus' ),
     //'description' => $description, // Include html tags such as <p>.
     'priority' => 160, // Mixed with top-level-section hierarchy.
   ) );
+  $wp_customize->add_panel( 'my_menus', array(
+    'title' => __( 'Awesome Media' ),
+    //'description' => $description, // Include html tags such as <p>.
+    'priority' => 180, // Mixed with top-level-section hierarchy.
+  ) );
+  $wp_customize->add_panel( 'panel_id', array(
+    'priority'       => 10,
+    'capability'     => 'edit_theme_options',
+    'theme_supports' => 'my-second-theme',
+    'title'          => __('awesome title'),
+    'description'    => 'wow',
+) );
   $section_id=1;
+  $section_id="hello";
   $wp_customize->add_section( $section_id , array(
   'title' => "haha",//$menu->name,
   'panel' => 'menus',
@@ -391,12 +429,29 @@ function my_customize_register( $wp_customize ) {
 //  'type' => 'nav_menu',
 //  'default' => $item_ids,
 //) );
+  $wp_customize->add_setting( 'couleur_des_liens', array(
+   // or 'option'
+  'type' => 'theme_mod',
+  'capability' => 'edit_theme_options',
+  'default' => '#000',
+  'sanitize_callback' => 'sanitize_hex_color',
+) );
+  $wp_customize->add_control(
+  new WP_Customize_Image_Control(
+    $wp_customize, // WP_Customize_Manager
+    'image_de_hero', // Setting id
+    array( // Args, including any custom ones.
+      'label' => __( 'Image de la ville ' ),
+      'section' => 'media',
+    )
+  )
+);
   $wp_customize->add_control(
   new WP_Customize_Color_Control(
     $wp_customize, // WP_Customize_Manager
-    'accent_color', // Setting id
+    'couleur_des_liens', // Setting id
     array( // Args, including any custom ones.
-      'label' => __( 'Accent Color' ),
+      'label' => __( 'Couleur des liens ' ),
       'section' => 'colors',
     )
   )

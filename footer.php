@@ -4,7 +4,7 @@
 <p>footer</p>
 <?php get_sidebar(); ?>
 <?php wp_list_categories(); ?>
-<div class="widget-section">
+<div class="widget-section mypost">
 widget here : 
 	<?php 
 $instance = array();
@@ -27,7 +27,7 @@ $instance['text'] = $_GET['text'];
 
 the_widget( 'WPDocs_New_Widget', $instance ); ?>
 </div><!-- .widget-section -->
-<div>
+<div class="mypost">
 <?php 
 if ( is_user_logged_in() ):
     echo '<p>vous etes bien connecté(e)';
