@@ -52,7 +52,18 @@ position: absolute;
 z-index: 30;
 background:transparent;
 width:100%;
-top:80px;
+top: <?php echo get_theme_mod('header_image_top', '80'); ?>px;
+
+
+}
+.texteimagepagedaccueil h2 {
+font-size: <?php echo get_theme_mod('header_image_title_size', '40'); ?>px;
+color: <?php echo get_theme_mod('header_image_title_color', '#fff'); ?>;
+
+}
+.texteimagepagedaccueil p {
+font-size: <?php echo get_theme_mod('header_image_description_size', '20'); ?>px;
+color: <?php echo get_theme_mod('header_image_title_color', '#fff'); ?>;
 
 }
 .texteimagepagedaccueil * {
@@ -92,7 +103,14 @@ if ( function_exists( 'the_custom_logo' ) ) {
 }
 ?>
 <?php wp_nav_menu( array( 'theme_location' => 'header-menu' ) ); ?>
-<h1>HEADER HOME</h1>
+<h6 class="mypost">
+<?php if (!empty(get_theme_mod("date_prochain_evenement")) ){ ?>
+Date de mon prochain évènement : <?php echo get_theme_mod("date_prochain_evenement")?></h6>
+<?php }else {
+echo "pas de prochain evenement prévu";
+}
+?>
+</h6>
 <div class="wp-block-cover alignfull containerimagepagedaccueil">
         <span aria-hidden="true" class="wp-block-cover__background has-contrast-background-color has-background-dim"></span>
 	<img class="imagepagedaccueil wp-block-cover__image-background wp-image-3838" alt="" src="<?php 
@@ -107,11 +125,23 @@ echo str_replace("-150x150",null,wp_get_attachment_image_src(get_theme_mod("imag
         <div class="texteimagepagedaccueil wp-block-cover__inner-container">
 
                 <!-- wp:heading {"textAlign":"center"} -->
-                <h2 class="wp-block-heading has-text-align-center"><?php esc_html_e( 'Welcome to My Site', 'themeslug' ); ?></h2>
+		<h2 class="wp-block-heading has-text-align-center"><?php 
+if (!empty (get_theme_mod("header_image_title")) ){	
+	esc_html_e( get_theme_mod("header_image_title"), 'themeslug' );
+}else {
+	echo 'Welcome to my site!';
+}?></h2>
                 <!-- /wp:heading -->
 
                 <!-- wp:paragraph {"align":"center"} -->
-                <p class="has-text-align-center"><?php esc_html_e( 'This is my little home away from home.', 'themslug' ); ?></p>
+		<p class="has-text-align-center"><?php 
+if (!empty (get_theme_mod("header_image_description")) ){	
+	esc_html_e( get_theme_mod("header_image_description"), 'themeslug' );
+}else {
+	echo 'This is my little home away from home.';
+}?></h2>
+
+</p>
                 <!-- /wp:paragraph -->
 
                 <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->

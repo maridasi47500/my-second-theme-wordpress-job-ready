@@ -1,4 +1,5 @@
 ![alt text](screenshot.png)
+![alt text](screenshot2.png)
 ![alt text](screenshot1.png)
 
 - fais cd /srv/www/wordpress/wp-content/themes/ && git clone my-second-theme
