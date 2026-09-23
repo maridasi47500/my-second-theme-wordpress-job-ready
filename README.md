@@ -6,4 +6,8 @@
 - fais cd /srv/www/wordpress/wp-content/themes/my-second-theme
 - avant de commencer fais cp class-wp-widget-factory.php ../../../wp-includes/ 
 - tu peux personnaliser l'image d'entete,l'image d'arriere plan, les menus, les reglades de la page d'accueil, et un css personnalisé
+- ajoute dans wp-config après define WP-DEBUG true, : define('MYEMAIL','*****@***.**');
+define('MYPASSWORD','***************'); in ../../../wp-config.php
+
+
 

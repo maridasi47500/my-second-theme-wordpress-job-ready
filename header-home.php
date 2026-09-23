@@ -11,7 +11,7 @@
 
 
 body.custom-background {
-  background-image: url("/wp-content/themes/my-second-theme/assets/img/terremusique.png");
+  /*background-image: url("/wp-content/themes/my-second-theme/assets/img/terremusique.png");*/
   background-position: left top;
   background-size: auto;
   background-repeat: repeat;

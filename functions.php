@@ -7,6 +7,7 @@ if ( ! isset ( $content_width) ) {
     $content_width = 800;
 }
 
+
 $args = array(
     'default-color' => '0000ff',
     'default-image' => get_theme_file_uri( 'assets/img/terremusique.png' ) ,

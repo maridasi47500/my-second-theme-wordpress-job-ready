@@ -18,23 +18,23 @@ body.custom-background {
   background-repeat: repeat;
   background-attachment: scroll;
 }
+
+
+#sidebar, h1, h2, h3, body p, .categories, .wp-block-paragraph, .mypost, #site-header, .menu {
+        background:<?php echo get_theme_mod( 'background_color_block_text', '#fff' ); ?>;
+color:white;
+
+
+}
 h1 {
-     color:<?php echo get_theme_mod( 'accent_color', '#fff' ); ?>;
+     color:<?php echo get_theme_mod( 'couleur_du_titre', '#fff' ); ?>;
+        font-size:<?php echo get_theme_mod( 'taille_du_titre', '21' ); ?>px;
 }
-.footer {
-     border-top: solid 1px #<?php echo get_theme_mod( 'background_color', '#fff' ); ?>;
-}
-.mypost {
-        background:black; color:white;
+a, a:hover, a:visited, a:link {
+     color:<?php echo get_theme_mod( 'couleur_des_liens', '#fff' ); ?>;
+        font-size:25px;
 }
 
-#sidebar, h1, h2, h3 {
-        background:black; color:white;
-
-}
-body p, .categories, .wp-block-paragraph, .mypost, #site-header, .menu {
-        background:black; color:white;
-}
 .someerror {
 background: #8B0000;
 color:white;
