@@ -21,7 +21,7 @@ body.custom-background {
 
 #sidebar, h1, h2, h3, body p, .categories, .wp-block-paragraph, .mypost, #site-header, .menu {
         background:<?php echo get_theme_mod( 'background_color_block_text', '#fff' ); ?>; 
-color:white;
+        color:<?php echo get_theme_mod( 'color_block_text', '#000' ); ?>; 
 
 
 }
@@ -103,6 +103,10 @@ if ( function_exists( 'the_custom_logo' ) ) {
 }
 ?>
 <?php wp_nav_menu( array( 'theme_location' => 'header-menu' ) ); ?>
+<h1>
+Bienvenue sur 
+Voyage et musique
+</h1>
 <h6 class="mypost">
 <?php if (!empty(get_theme_mod("date_prochain_evenement")) ){ ?>
 Date de mon prochain évènement : <?php echo get_theme_mod("date_prochain_evenement")?></h6>

@@ -294,5 +294,207 @@ class WPDocs_New_Widget extends WP_Widget {
                 </p></form>";
 	}
 }
+class WPDocs_IG_Widget extends WP_Widget {
+
+	/**
+	 * Constructs the new widget.
+	 *
+	 * @see WP_Widget::__construct()
+	 */
+	function __construct() {
+		// Instantiate the parent object.
+	        parent::__construct(
+                        'my-text',  // Base ID
+                        'My Text'   // Name
+                );
+                #add_action( 'widgets_init', function() {
+                #        register_widget( 'WPDocs_New_Widget' );
+                #});
+	}
+
+
+
+	/**
+	 * The widget's HTML output.
+	 *
+	 * @see WP_Widget::widget()
+	 *
+	 * @param array $args     Display arguments including before_title, after_title,
+	 *                        before_widget, and after_widget.
+	 * @param array $instance The settings for the particular instance of the widget.
+	 */
+	        public $args = array(
+                'before_title'  => '<h4 class="widgettitle">',
+                'after_title'   => '</h4>',
+                'before_widget' => '<div class="widget-wrap">',
+                'after_widget'  => '</div></div>',
+        );
+
+	function widget( $args, $instance ) {
+		echo $args['before_widget'];
+                if ( ! empty( $instance['account'] ) ) {
+                        echo $args['before_title'] . "photos du compte " . apply_filters( 'widget_title', $instance['account'] ) . $args['after_title'];
+
+		} else {
+                        echo $args['before_title'] . "chercher les photos d'un compte instagram " . $args['after_title'];
+                }
+                echo '<div class="formwidget">';
+
+		echo $this->form($instance);
+                echo '</div>';
+                if ( ! empty( $instance['account'] ) ) {
+                    echo '<div class="photoswidget">';
+                    $username = $instance['account'];
+		    $header = array();
+                    $header[] = 'Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5';
+                    $header[] = 'Cache-Control: max-age=0';
+                    $header[] = 'Connection: keep-alive';
+                    $header[] = 'Keep-Alive: 300';
+                    $header[] = 'Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7';
+                    $header[] = 'Accept-Language: en-us,en;q=0.5';
+                    $header[] = 'Pragma: ';
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, 'https://www.instagram.com/' . $username );
+                    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.0.11) Gecko/2009060215 Firefox/3.0.11 (.NET CLR 3.5.30729)');
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+                    curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                    curl_setopt($ch, CURLOPT_ENCODING, '');
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+                    $instaResult = curl_exec($ch);
+                    curl_close ($ch);
+
+		    $mypizza=explode("<script", $instaResult);
+		    function array_get_nested_value($data, array $keys) {
+                        if (empty($keys)) {
+                            return $data;
+                        }
+                        $current = array_shift($keys);
+			echo "array:: <p>" . json_encode($data) . "</p>";
+			echo "key:::: <p>" . $current . "</p>";
+			try{
+                        if (!is_array($data) || !isset($data[$current])) {
+                        if (!isset($data[$current])) {
+                            // key does not exist or $data does not contain an array
+                            // you could also throw an exception here
+			    echo "division by zero";
+			        throw new Exception('Division by zero.');
+			}
+		         $i = array_search($current, $data);
+			 if (! $i) {
+                            return null;
+			 } else {
+				 $current=$i;
+			 }
+			}else{
+			    echo "HEYYY";
+                        }
+			}catch(Exception $e) {
+		         $i = array_search($current, $data);
+			 if (! $i) {
+                            return null;
+			 } else {
+				 $current=$i;
+			 }
+			}
+			//echo $current;
+                        return array_get_nested_value($data[$current], $keys);
+                    }
+
+		    foreach ($mypizza as $item) {
+			    //echo "item";
+			    if (str_contains($item, "Photo by")){
+				    //echo "photo";
+				    $jsoncontent=explode(">", $item)[1];
+				    //echo $jsoncontent;
+				    $jsoncontent1=explode("</script>", $jsoncontent)[0];
+				    //echo "<code>" . $jsoncontent1 . "</code>";
+				    //$insta= (array) json_decode($jsoncontent1, true);
+				    $insta= $jsoncontent1;
+				    //$pizza=$insta["require"][0][3][0]["__bbox"]["require"][0][3][1]["__bbox"]["result"]["data"]["xig_user_by_username"]["polaris_ordered_timeline_connection"]["edges"];
+
+				    $array = [
+                                        'test1' => [
+                                            'foo' => [
+                                                'hello' => 123
+                                            ]
+                                        ],
+                                        'test2' => 'bar'
+                                    ];
+                                    //echo array_get_nested_value($array, ['test1', 'foo', 'hello']); // will return 123
+                                    //$pizza1=array_get_nested_value($insta, ["require", 0, 3, 0, "__bbox", "require", 0, 3, 1, "__bbox", "result", "data", "xig_user_by_username", "polaris_ordered_timeline_connection", "edges"]); 
+				    echo "<h1>LAST POSTS from " . $username . "</h1>";
+				    //echo json_encode($pizza1, true);
+
+
+		    $pizza=explode("\"text\":\"", $insta);
+		    $paspremier=false;
+		    foreach ($pizza as $part) {
+			    if ($paspremier) {
+		    $mapart=explode("\"", $part)[0];
+		    $mypic=explode("uri\":\"", $part)[1];
+		    $pic=explode("\"", $mypic)[0];
+                        echo "<p>". $mapart . "</p>";
+			    }
+			    $paspremier=true;
+                    }
+                    }
+                    }
+		    
+		//echo $instaResult;
+                    //#$insta = json_decode($instaResult);
+                    //#$instagram_photos = $insta->graphql->user->edge_owner_to_timeline_media->edges;
+		    //#foreach ($instagram_photos as $value) {
+                    //    echo "<img src=\"" . $value->node->display_url . "\>";
+                    //#}
+                echo '</div>';
+
+		} else {
+			echo "<p>no account</p>";
+		}
+                echo '</div>';
+
+                echo $args['after_widget'];
+
+	
+	}
+
+	/**
+	 * The widget update handler.
+	 *
+	 * @see WP_Widget::update()
+	 *
+	 * @param array $new_instance The new instance of the widget.
+	 * @param array $old_instance The old instance of the widget.
+	 * @return array The updated instance of the widget.
+	 */
+	function update( $new_instance, $old_instance ) {
+                $instance          = array();
+                $instance['account'] = ( ! empty( $new_instance['account'] ) ) ? strip_tags( $new_instance['account'] ) : '';
+                return $instance;
+
+	}
+
+	/**
+	 * Output the admin widget options form HTML.
+	 *
+	 * @param array $instance The current widget settings.
+	 * @return string The HTML markup for the form.
+	 */
+	function form( $instance ) {
+                $text  = ! empty( $instance['account'] ) ? $instance['account'] : esc_html__( '', 'text_domain' );
+		$mytext=$this->get_field_id('account' );
+
+		return "<form action=\"\">
+			<p>
+                        <label for=\"" . esc_attr($mytext ) . "\">" . esc_html__( 'Instagram account:', 'text_domain' ) . "</label><input class=\"widefat\" id=\"" .  esc_attr( $mytext ) . "\" name=\"" . esc_attr( 'account' ) . "\" type=\"text\" value=\"" .  esc_attr( $text ) . "\" >
+                </p>
+                <p class=\"actions\">
+<input type=\"submit\" value=\"envoyer\"/>
+                        
+                </p></form>";
+	}
+}
 add_action( 'widgets_init', 'wpdocs_register_widgets' );
 

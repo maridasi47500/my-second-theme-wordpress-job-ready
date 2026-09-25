@@ -51,6 +51,21 @@ $instance['text'] = $_GET['text'];
 
 the_widget( 'WPDocs_New_Widget', $instance ); ?>
 </div><!-- .widget-section -->
+<div class="widget-section mypost mysecondwidget">
+widget here : 
+	<?php 
+
+$instance = array();
+                if ( empty( $_GET['account'])  ) {
+$instance['account'] = "pathport";
+		} else {
+$instance['account'] = $_GET['account'];
+		}
+
+
+
+the_widget( 'WPDocs_IG_Widget', $instance ); ?>
+</div><!-- .widget-section -->
 <div class="mypost">
 <?php 
 if ( is_user_logged_in() ):

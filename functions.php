@@ -248,6 +248,7 @@ $old_error_handler = set_error_handler("myErrorHandler");
  */
 function wpdocs_register_widgets() {
         register_widget( 'WPDocs_New_Widget' );
+        register_widget( 'WPDocs_IG_Widget' );
 }
 
 
@@ -425,6 +426,18 @@ function my_customize_register( $wp_customize ) {
   'default' => '#000',
   'sanitize_callback' => 'sanitize_hex_color',
 ) );
+  $wp_customize->add_setting( 'color_block_text', array(
+   // or 'option'
+  'type' => 'theme_mod',
+  'capability' => 'edit_theme_options',
+  'default' => '#fff',
+  'sanitize_callback' => 'sanitize_hex_color',
+) );
+  $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'color_block_text', array(
+  'default' => '#000',
+  'label' => __( 'couleur du texte dans les  blocks de  texte', 'my-second-theme' ),
+  'section' => 'colors',
+) ) );
   $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'background_color_block_text', array(
   'default' => '#000',
   'label' => __( 'couleur du fond des blocks text', 'my-second-theme' ),
