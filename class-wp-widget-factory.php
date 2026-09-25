@@ -14,6 +14,13 @@
  * @since 4.4.0 Moved to its own file from wp-includes/widgets.php
  */
 #[AllowDynamicProperties]
+require_once(get_template_directory().'/../../../../wordpress/wp-includes/PHPMailer/PHPMailer.php');
+require_once(get_template_directory().'/../../../wp-config.php');
+require_once(get_template_directory().'/../../../../wordpress/wp-includes/PHPMailer/SMTP.php');
+require_once(get_template_directory().'/../../../../wordpress/wp-includes/PHPMailer/Exception.php');
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 class WP_Widget_Factory {
 
 	/**
@@ -177,6 +184,9 @@ class WPDocs_New_Widget extends WP_Widget {
 
 	function widget( $args, $instance ) {
 		echo $args['before_widget'];
+                if ( ! empty( $instance['email'] ) ) {
+                        echo $args['before_title'] . apply_filters( 'widget_title', $instance['email'] ) . $args['after_title'];
+                }
                 if ( ! empty( $instance['title'] ) ) {
                         echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
                 }
@@ -189,6 +199,43 @@ class WPDocs_New_Widget extends WP_Widget {
                 if ( ! empty( $instance['title']) && ! empty( $instance['text'] ) ) {
 
 		echo $this->form($instance);
+                if ( ! empty( $instance['email'] ) ) {
+                $mail = new PHPMailer;
+                
+                $mail->isSMTP();                                      // Set mailer to use SMTP
+		$mail->Port = '587';
+                $mail->Host = 'smtp.gmail.com';  // separate by ";"  ;;;Specify main and backup SMTP servers
+                $mail->SMTPAuth = true;                               // Enable SMTP authentication
+                $mail->Username = MYEMAIL;                 // SMTP username
+                $mail->Password = MYPASSWORD;                           // SMTP password
+                $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+                
+                $mail->From = MYEMAIL;
+                $mail->FromName = 'Mailer';
+                $mail->addAddress($instance['email'], 'Joe User');     // Add a recipient
+                //$mail->addAddress('ellen@example.com');               // Name is optional
+                //$mail->addReplyTo('info@example.com', 'Information');
+                //$mail->addCC('cc@example.com');
+                //$mail->addBCC('bcc@example.com');
+                
+                $mail->WordWrap = 50;                                 // Set word wrap to 50 characters
+                //#$mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+                //#$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+                $mail->isHTML(true);                                  // Set email format to HTML
+                
+                $mail->Subject =  'Here is the subject' . $instance["title"];
+                $mail->Body    = 'This is the HTML message body <b>in bold!</b>' . $instance["text"];
+                $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+                $mail->CharSet = 'UTF-8';
+                
+                if(!$mail->send()) {
+                    echo 'Message could not be sent.';
+                    echo 'Mailer Error: ' . $mail->ErrorInfo;
+                } else {
+                    echo 'Message has been sent';
+                }
+                }
+
 		} else {
 			echo "no form";
 		}
@@ -209,6 +256,7 @@ class WPDocs_New_Widget extends WP_Widget {
 	 */
 	function update( $new_instance, $old_instance ) {
                 $instance          = array();
+                $instance['email'] = ( ! empty( $new_instance['email'] ) ) ? strip_tags( $new_instance['email'] ) : '';
                 $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
                 $instance['text']  = ( ! empty( $new_instance['text'] ) ) ? $new_instance['text'] : '';
                 return $instance;
@@ -222,13 +270,19 @@ class WPDocs_New_Widget extends WP_Widget {
 	 * @return string The HTML markup for the form.
 	 */
 	function form( $instance ) {
+		$email = ! empty( $instance['email'] ) ? $instance['email'] : esc_html__( '', 'text_domain' );
 		$title = ! empty( $instance['title'] ) ? $instance['title'] : esc_html__( '', 'text_domain' );
                 $text  = ! empty( $instance['text'] ) ? $instance['text'] : esc_html__( '', 'text_domain' );
+		$myemail=$this->get_field_id('email' );
 		$mytitle=$this->get_field_id('title' );
 		$mytext=$this->get_field_id('text' );
 
 		return "<form action=\"\"><p>
                         <label for=\"" . esc_attr($mytitle ) . "\">" . esc_html__( 'Title:', 'text_domain' ) . "</label><input class=\"widefat\" id=\"" .  esc_attr( $mytitle ) . "\" name=\"" . esc_attr( 'title' ) . "\" type=\"text\" value=\"" .  esc_attr( $title ) . "\" >
+                </p>
+                <p>
+                        <label for=\"" .   esc_attr( $myemail ) . "\">" .   esc_html__( 'Email:', 'text_domain' ) . "</label>
+                        <input class=\"widefat\" id=\"" .  esc_attr( $mytext ) . "\" name=\"".  esc_attr( 'email' ) . "\" type=\"text\" cols=\"30\" rows=\"10\" value=\"" .  esc_attr( $email ) . "\" type=\"email\"/>
                 </p>
                 <p>
                         <label for=\"" .   esc_attr( $mytext ) . "\">" .   esc_html__( 'Text:', 'text_domain' ) . "</label>
