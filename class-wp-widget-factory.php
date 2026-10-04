@@ -348,6 +348,7 @@ class WPDocs_IG_Widget extends WP_Widget {
 		    $header = array();
                     $header[] = 'Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5';
                     $header[] = 'Cache-Control: max-age=0';
+                    $header[] = 'Content-Type: text/html; charset=utf-8';
                     $header[] = 'Connection: keep-alive';
                     $header[] = 'Keep-Alive: 300';
                     $header[] = 'Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7';
@@ -430,12 +431,37 @@ class WPDocs_IG_Widget extends WP_Widget {
 
 		    $pizza=explode("\"text\":\"", $insta);
 		    $paspremier=false;
+		    function unenc_utf16_code_units($string) {
+    /* go for possible surrogate pairs first */
+    $string = preg_replace_callback(
+        '/\\\\U(D[89ab][0-9a-f]{2})\\\\U(D[c-f][0-9a-f]{2})/i',
+        function ($matches) {
+            $hi_surr = hexdec($matches[1]);
+            $lo_surr = hexdec($matches[2]);
+            $scalar = (0x10000 + (($hi_surr & 0x3FF) << 10) |
+                ($lo_surr & 0x3FF));
+            return "&#x" . dechex($scalar) . ";";
+        }, $string);
+    /* now the rest */
+    $string = preg_replace_callback('/\\\\U([0-9a-f]{4})/i',
+        function ($matches) {
+            //just to remove leading zeros
+            return "&#x" . dechex(hexdec($matches[1])) . ";";
+        }, $string);
+    return $string;
+}
 		    foreach ($pizza as $part) {
 			    if ($paspremier) {
 		    $mapart=explode("\"", $part)[0];
 		    $mypic=explode("uri\":\"", $part)[1];
 		    $pic=explode("\"", $mypic)[0];
-                        echo "<p>". $mapart . "</p>";
+                        //echo "<p class\"ig-post\">". htmlentities(utf8_decode($mapart)) . "</p>";
+
+                          $html_utf8 = unenc_utf16_code_units($mapart);
+ 
+                        //echo "<p class\"ig-post\">" . utf8_decode($mapart) . "</p>";
+                        //echo "<p class\"ig-post\">" . $html_utf8 . "</p>";
+                        echo "<p class\"ig-post\">" . str_replace("\\n", "<br>", $html_utf8) . "</p>";
 			    }
 			    $paspremier=true;
                     }
