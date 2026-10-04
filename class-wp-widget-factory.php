@@ -294,6 +294,228 @@ class WPDocs_New_Widget extends WP_Widget {
                 </p></form>";
 	}
 }
+class WPDocs_Musical_Widget extends WP_Widget {
+
+	/**
+	 * Constructs the new widget.
+	 *
+	 * @see WP_Widget::__construct()
+	 */
+	function __construct() {
+		// Instantiate the parent object.
+	        parent::__construct(
+                        'my-text',  // Base ID
+                        'My Text'   // Name
+                );
+                #add_action( 'widgets_init', function() {
+                #        register_widget( 'WPDocs_New_Widget' );
+                #});
+	}
+
+
+
+	/**
+	 * The widget's HTML output.
+	 *
+	 * @see WP_Widget::widget()
+	 *
+	 * @param array $args     Display arguments including before_title, after_title,
+	 *                        before_widget, and after_widget.
+	 * @param array $instance The settings for the particular instance of the widget.
+	 */
+	        public $args = array(
+                'before_title'  => '<h4 class="widgettitle">',
+                'after_title'   => '</h4>',
+                'before_widget' => '<div class="widget-wrap">',
+                'after_widget'  => '</div></div>',
+        );
+
+	function widget( $args, $instance ) {
+		echo $args['before_widget'];
+                if ( ! empty( $instance['someemail'] ) ) {
+                        echo $args['before_title'] . apply_filters( 'widget_title', $instance['someemail'] ) . $args['after_title'];
+                }
+                if ( ! empty( $instance['sometitle'] ) ) {
+                        echo $args['before_title'] . apply_filters( 'widget_title', $instance['sometitle'] ) . $args['after_title'];
+                }
+                if ( ! empty( $instance['sometext'] ) ) {
+                echo '<div class="textwidget">';
+                echo esc_html__( $instance['sometext'], 'text_domain' );
+                echo '</div>';
+                }
+                if ( ! empty( $instance['musicaltext'] ) ) {
+                echo '<div class="musicaltextwidget"> MUSICAL TEXT : ';
+                echo esc_html__( $instance['musicaltext'], 'text_domain' );
+                echo '</div>';
+                }
+                echo '<div class="formwidget">';
+                if ( ! empty( $instance['sometitle']) && ! empty( $instance['sometext'] ) ) {
+
+		echo $this->form($instance);
+                if ( ! empty( $instance['someemail'] ) ) {
+			$myid=substr(md5(mt_rand()), 0, 7);
+			  $realpicvalue= "scoretosend_myscore_sample_" . $myid . ".png";
+			  $mypicvalue= "scoretosend_myscore_sample_" . $myid ;
+			$getMyscore=stripslashes($instance["musicaltext"]);
+			$getKeySignature=$instance["keysignature"];
+			$getTimeSignature=$instance["timesignature"];
+			$lilypondname="/../wp-content/themes/my-second-theme/assets/scores/scoretosend_myscore_sample_" . $myid . ".ly";
+			$somepicname="/../wp-content/themes/my-second-theme/assets/scores/" . $mypicvalue;
+			$picname="/../wp-content/themes/my-second-theme/assets/scores/" . $realpicvalue;
+			$htmlname="/../wp-content/themes/my-second-theme/assets/scores/scoretosend_myscore_sample_" . $myid . ".html";
+			$samplescore="/../wp-content/themes/my-second-theme/samplescoreexample.ly";
+
+	    $file_pointer = fopen(__DIR__ . $samplescore, "r") or die("Unable to open file of the score example!");
+            $contents= fread($file_pointer, filesize(__DIR__ . $samplescore));
+            fclose($file_pointer);
+	    //echo str_replace("world", "Peter", "Hello world!");
+	    $contents= str_replace("KEYSCOREHERE", str_replace(" ", "\\", $getKeySignature), $contents);
+	    $contents= str_replace("TIMESCOREHERE", $getTimeSignature, $contents);
+	    $contents= str_replace("CONTENTSCOREHERE", $getMyscore, $contents);
+            $myfile = fopen(__DIR__ . $lilypondname, "w") or die("Unable to open file to write the score in it!");
+            fwrite($myfile, $contents);
+            fclose($myfile);
+            $myfile = fopen(__DIR__ . $htmlname, "w") or die("Unable to open file!");
+            fwrite($myfile, "<lilypond staffsize=34>" . $contents . "</lilypond>");
+            fclose($myfile);
+
+            ob_start();
+
+
+
+            $p1=["lilypond", "-dclip-systems",  "--output=\"" . __DIR__ . $somepicname . "\"", "--png", __DIR__ . $lilypondname];
+
+
+            echo "j'ai voulu essayer" . (join(" ", $p1));
+            $dir = shell_exec(join(" ", $p1));
+            if (is_null($dir))
+            {
+
+		    echo "<p>hopopop erreur</p>";
+	    } else {
+
+		    echo "<p>hop! la partition a été transformée en image</p>";
+	    }
+                $mail = new PHPMailer;
+                
+                $mail->isSMTP();                                      // Set mailer to use SMTP
+		$mail->Port = '587';
+                $mail->Host = 'smtp.gmail.com';  // separate by ";"  ;;;Specify main and backup SMTP servers
+                $mail->SMTPAuth = true;                               // Enable SMTP authentication
+                $mail->Username = MYEMAIL;                 // SMTP username
+                $mail->Password = MYPASSWORD;                           // SMTP password
+                $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+                
+                $mail->From = MYEMAIL;
+                $mail->FromName = 'Mailer';
+                $mail->addAddress($instance['someemail'], 'Joe User');     // Add a recipient
+                //$mail->addAddress('ellen@example.com');               // Name is optional
+                //$mail->addReplyTo('info@example.com', 'Information');
+                //$mail->addCC('cc@example.com');
+                //$mail->addBCC('bcc@example.com');
+                
+                $mail->WordWrap = 50;                                 // Set word wrap to 50 characters
+                //#$mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+                //#$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+                //$mail->addAttachment(__DIR__ . $lilypondname, 'MyId1');    // Optional name
+                //$mail->addAttachment(__DIR__ . $picname);    // Optional name
+                $mail->addEmbeddedImage(__DIR__ . $picname, "MyId1");    // Optional name
+                //$mail->addAttachment(__DIR__ . $lilypondname, 'new.jpg');    // Optional name
+                $mail->isHTML(true);                                  // Set email format to HTML
+                
+                $mail->Subject =  'Here is the subject' . $instance["sometitle"];
+                $mail->Body    = 'This is the HTML message body <b>in bold!</b>' . stripslashes($instance["sometext"]) . "<img src=\"cid:MyId1\"/>";
+                $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+                $mail->CharSet = 'UTF-8';
+                
+                if(!$mail->send()) {
+                    echo 'Message could not be sent.';
+                    echo 'Mailer Error: ' . $mail->ErrorInfo;
+                } else {
+                    echo 'Message has been sent';
+                }
+                }
+
+		} else {
+			echo "no form";
+		}
+                echo '</div>';
+                echo $args['after_widget'];
+
+	
+	}
+
+	/**
+	 * The widget update handler.
+	 *
+	 * @see WP_Widget::update()
+	 *
+	 * @param array $new_instance The new instance of the widget.
+	 * @param array $old_instance The old instance of the widget.
+	 * @return array The updated instance of the widget.
+	 */
+	function update( $new_instance, $old_instance ) {
+                $instance          = array();
+                $instance['musicaltext'] = ( ! empty( $new_instance['musicaltext'] ) ) ? strip_tags( $new_instance['musicaltext'] ) : '';
+                $instance['someemail'] = ( ! empty( $new_instance['someemail'] ) ) ? strip_tags( $new_instance['someemail'] ) : '';
+                $instance['sometitle'] = ( ! empty( $new_instance['sometitle'] ) ) ? strip_tags( $new_instance['sometitle'] ) : '';
+                $instance['sometext']  = ( ! empty( $new_instance['sometext'] ) ) ? $new_instance['sometext'] : '';
+                $instance['timesignature']  = ( ! empty( $new_instance['timesignature'] ) ) ? $new_instance['timesignature'] : '';
+                $instance['keysignature']  = ( ! empty( $new_instance['keysignature'] ) ) ? $new_instance['keysignature'] : '';
+                return $instance;
+
+	}
+
+	/**
+	 * Output the admin widget options form HTML.
+	 *
+	 * @param array $instance The current widget settings.
+	 * @return string The HTML markup for the form.
+	 */
+	function form( $instance ) {
+		$email = ! empty( $instance['someemail'] ) ? $instance['someemail'] : esc_html__( '', 'text_domain' );
+		$title = ! empty( $instance['sometitle'] ) ? $instance['sometitle'] : esc_html__( '', 'text_domain' );
+                $text  = ! empty( $instance['sometext'] ) ? $instance['sometext'] : esc_html__( '', 'text_domain' );
+                $musicaltext  = ! empty( $instance['musicaltext'] ) ? $instance['musicaltext'] : esc_html__( '', 'text_domain' );
+                $keysignature  = ! empty( $instance['keysignature'] ) ? $instance['keysignature'] : esc_html__( '', 'text_domain' );
+                $timesignature  = ! empty( $instance['timesignature'] ) ? $instance['timesignature'] : esc_html__( '', 'text_domain' );
+		$myemail=$this->get_field_id('someemail' );
+		$mytitle=$this->get_field_id('sometitle' );
+		$mytext=$this->get_field_id('sometext' );
+		$mymusicaltext=$this->get_field_id('musicaltext' );
+		$mykeysignature=$this->get_field_id('keysignature' );
+		$mytimesignature=$this->get_field_id('timesignature' );
+
+		return "<form action=\"\">
+			<p>
+                        <label for=\"" . esc_attr($mytitle ) . "\">" . esc_html__( 'Title:', 'text_domain' ) . "</label><input class=\"widefat\" id=\"" .  esc_attr( $mytitle ) . "\" name=\"" . esc_attr( 'sometitle' ) . "\" type=\"text\" value=\"" .  esc_attr( $title ) . "\" >
+                </p>
+                <p>
+                        <label for=\"" .   esc_attr( $myemail ) . "\">" .   esc_html__( 'Email:', 'text_domain' ) . "</label>
+                        <input class=\"widefat\" id=\"" .  esc_attr( $mytext ) . "\" name=\"".  esc_attr( 'someemail' ) . "\" cols=\"30\" rows=\"10\" value=\"" .  esc_attr( $email ) . "\" type=\"email\"/>
+                </p>
+                <p>
+                        <label for=\"" .   esc_attr( $mytext ) . "\">" .   esc_html__( 'Text:', 'text_domain' ) . "</label>
+                        <textarea class=\"widefat\" id=\"" .  esc_attr( $mytext ) . "\" name=\"".  esc_attr( 'sometext' ) . "\" type=\"text\" cols=\"30\" rows=\"10\">" .  esc_attr( stripslashes($text) ) . "</textarea>
+                </p>
+                <p>
+                        <label for=\"" .   esc_attr( $mykeysignature ) . "\">" .   esc_html__( 'My key signature (c major, d minor, etc):', 'text_domain' ) . "</label>
+                        <input class=\"widefat\" id=\"" .  esc_attr( $mykeysignature ) . "\" name=\"".  esc_attr( 'keysignature' ) . "\" type=\"text\" cols=\"30\" rows=\"10\" value=\"" .  esc_attr( $keysignature ) . "\" />
+                </p>
+                <p>
+                        <label for=\"" .   esc_attr( $mytimesignature ) . "\">" .   esc_html__( 'My time signature (4/4, 3/4, 6/8, etc):', 'text_domain' ) . "</label>
+                        <input class=\"widefat\" id=\"" .  esc_attr( $mytimesignature ) . "\" name=\"".  esc_attr( 'timesignature' ) . "\" type=\"text\" cols=\"30\" rows=\"10\" value=\"" .  esc_attr( $timesignature ) . "\" />
+                </p>
+                <p>
+                        <label for=\"" .   esc_attr( $mymusicaltext ) . "\">" .   esc_html__( 'My musical Text like a signature:', 'text_domain' ) . "</label>
+                        <textarea class=\"widefat\" id=\"" .  esc_attr( $mymusicaltext ) . "\" name=\"".  esc_attr( 'musicaltext' ) . "\" type=\"text\" cols=\"30\" rows=\"10\">" . esc_attr( stripslashes( $musicaltext )) . "</textarea>
+                </p>
+                <p class=\"actions\">
+<input type=\"submit\" value=\"envoyer\"/>
+                        
+                </p></form>";
+	}
+}
 class WPDocs_IG_Widget extends WP_Widget {
 
 	/**

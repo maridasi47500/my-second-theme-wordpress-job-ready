@@ -10,4 +10,4 @@
 define('MYPASSWORD','***************'); in ../../../wp-config.php
 
 
-
+- fais sudo chown www-data assets/scores/ -R

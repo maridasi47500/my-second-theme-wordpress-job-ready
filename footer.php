@@ -5,6 +5,53 @@
 <?php get_sidebar(); ?>
 <?php wp_list_categories(); ?>
 <div class="widget-section mypost">
+Musical widget here : 
+	<?php 
+
+$instance = array();
+                if ( empty( $_GET['sometitle'])  ) {
+$instance['sometitle'] = "hello";
+		} else {
+$instance['sometitle'] = $_GET['sometitle'];
+		}
+                if ( empty( $_GET['someemail'])  ) {
+$instance['someemail'] = "";
+		} else {
+$instance['someemail'] = $_GET['someemail'];
+		}
+
+
+                if ( empty( $_GET['sometext'] )) {
+
+$instance['sometext'] = "how are you today";
+		} else {
+$instance['sometext'] = $_GET['sometext'];
+		}
+                if ( empty( $_GET['timesignature'] )) {
+
+$instance['timesignature'] = "4/4";
+		} else {
+$instance['timesignature'] = $_GET['timesignature'];
+		}
+                if ( empty( $_GET['keysignature'] )) {
+
+$instance['keysignature'] = "c major";
+		} else {
+$instance['keysignature'] = $_GET['keysignature'];
+		}
+                if ( empty( $_GET['musicaltext'] )) {
+
+$instance['musicaltext'] = "a4 b c' d' a4 b c' d'";
+		} else {
+$instance['musicaltext'] = $_GET['musicaltext'];
+		}
+#$args = array();
+#$args['title'] = 'sample';
+#$args['text'] = 'text';
+
+the_widget( 'WPDocs_Musical_Widget', $instance ); ?>
+</div><!-- .widget-section -->
+<div class="widget-section mypost">
 widget here : 
 	<?php 
 // Source - https://stackoverflow.com/a/12317831

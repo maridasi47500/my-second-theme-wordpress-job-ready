@@ -248,6 +248,7 @@ $old_error_handler = set_error_handler("myErrorHandler");
  */
 function wpdocs_register_widgets() {
         register_widget( 'WPDocs_New_Widget' );
+        register_widget( 'WPDocs_Musical_Widget' );
         register_widget( 'WPDocs_IG_Widget' );
 }
 
