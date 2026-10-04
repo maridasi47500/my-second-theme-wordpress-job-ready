@@ -386,12 +386,13 @@ class WPDocs_Musical_Widget extends WP_Widget {
             $p1=["lilypond", "-dclip-systems",  "--output=\"" . __DIR__ . $somepicname . "\"", "--png", __DIR__ . $lilypondname];
 
 
-            echo "j'ai voulu essayer" . (join(" ", $p1));
+            //echo "j'ai voulu essayer" . (join(" ", $p1));
             $dir = shell_exec(join(" ", $p1));
             if (is_null($dir))
             {
 
-		    echo "<p>hopopop erreur</p>";
+
+		    echo "<p>hop! la partition doit avoir été transformée en image</p>";
 	    } else {
 
 		    echo "<p>hop! la partition a été transformée en image</p>";
