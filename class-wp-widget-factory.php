@@ -452,7 +452,7 @@ class WPDocs_IG_Widget extends WP_Widget {
 }
 		    foreach ($pizza as $part) {
 			    if ($paspremier) {
-		    $mapart=explode("\"", $part)[0];
+		    $mapart=explode("\"}", $part)[0];
 		    $mypic=explode("uri\":\"", $part)[1];
 		    $pic=explode("\"", $mypic)[0];
                         //echo "<p class\"ig-post\">". htmlentities(utf8_decode($mapart)) . "</p>";

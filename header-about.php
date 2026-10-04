@@ -7,24 +7,31 @@
 <?php wp_head(); ?>
         ...
 <style type="text/css" id="custom-background-css">
+
 body.custom-background {
-  background-image: url("/wp-content/themes/my-second-theme/assets/img/terremusique.png");
+  /*background-image: url("/wp-content/themes/my-second-theme/assets/img/terremusique.png");*/
   background-position: left top;
   background-size: auto;
   background-repeat: repeat;
   background-attachment: scroll;
 }
-.mypost {
-        background:black; color:white;
+
+
+#sidebar, h1, h2, h3, body p, .categories, .wp-block-paragraph, .mypost, #site-header, .menu {
+        background:<?php echo get_theme_mod( 'background_color_block_text', '#fff' ); ?>;
+        color:<?php echo get_theme_mod( 'color_block_text', '#000' ); ?>;
+
+
+}
+h1 {
+     color:<?php echo get_theme_mod( 'couleur_du_titre', '#fff' ); ?>;
+        font-size:<?php echo get_theme_mod( 'taille_du_titre', '21' ); ?>px;
+}
+a, a:hover, a:visited, a:link {
+     color:<?php echo get_theme_mod( 'couleur_des_liens', '#fff' ); ?>;
+        font-size:25px;
 }
 
-#sidebar, h1, h2, h3 {
-        background:black; color:white;
-
-}
-body p, .categories, .wp-block-paragraph, .mypost, #site-header, .menu {
-        background:black; color:white;
-}
 .someerror {
 background: #8B0000;
 color:white;

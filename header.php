@@ -11,8 +11,9 @@
 <head>
         ...
 <style type="text/css" id="custom-background-css">
+
 body.custom-background {
-  background-image: url("/wp-content/themes/my-second-theme/assets/img/terremusique.png");
+  /*background-image: url("/wp-content/themes/my-second-theme/assets/img/terremusique.png");*/
   background-position: left top;
   background-size: auto;
   background-repeat: repeat;
@@ -20,9 +21,9 @@ body.custom-background {
 }
 
 
-#sidebar, h1, h2, h3, body p, .categories, .wp-block-paragraph, .mypost, #site-header, .menu {
+#sidebar, h1, h2, h3, body p, .categories, .wp-block-paragraph, .mypost, #site-header, .showpost, .menu {
         background:<?php echo get_theme_mod( 'background_color_block_text', '#fff' ); ?>;
-color:white;
+        color:<?php echo get_theme_mod( 'color_block_text', '#000' ); ?>;
 
 
 }
@@ -34,6 +35,7 @@ a, a:hover, a:visited, a:link {
      color:<?php echo get_theme_mod( 'couleur_des_liens', '#fff' ); ?>;
         font-size:25px;
 }
+
 
 .someerror {
 background: #8B0000;
@@ -47,19 +49,6 @@ font-weight:900;
         ...
 </head>
 <body <?php body_class(); ?>>
-<style>
-a:visited, a:hover, a:link {
-color:white;
-}
-.someerror {
-background: #8B0000;
-color:white;
-font-size: 34;
-font-weight:900;
-
-}
-
-</style>
 <?php if ( get_header_image() ) : ?>
 	<div id="site-header">
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
