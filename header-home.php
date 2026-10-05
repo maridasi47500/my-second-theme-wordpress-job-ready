@@ -4,10 +4,15 @@
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <title><?php wp_title( '|', true, 'right' ); ?></title>
 <link rel="stylesheet" href="<?php echo esc_url( get_stylesheet_uri() ); ?>" type="text/css" />
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
 <?php wp_head(); ?>
 
         ...
 <style type="text/css" id="custom-background-css">
+#somemap { width:100%; height: 180px; }
+
 
 
 body.custom-background {

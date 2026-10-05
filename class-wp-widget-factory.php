@@ -587,6 +587,7 @@ class WPDocs_IG_Widget extends WP_Widget {
                     curl_setopt($ch, CURLOPT_ENCODING, '');
                     curl_setopt($ch, CURLOPT_TIMEOUT, 20);
                     $instaResult = curl_exec($ch);
+		    
                     curl_close ($ch);
 
 		    $mypizza=explode("<script", $instaResult);
@@ -690,8 +691,8 @@ class WPDocs_IG_Widget extends WP_Widget {
                     }
                     }
                     }
-		    
-		//echo $instaResult;
+
+		   
                     //#$insta = json_decode($instaResult);
                     //#$instagram_photos = $insta->graphql->user->edge_owner_to_timeline_media->edges;
 		    //#foreach ($instagram_photos as $value) {
@@ -738,6 +739,215 @@ class WPDocs_IG_Widget extends WP_Widget {
 		return "<form action=\"\">
 			<p>
                         <label for=\"" . esc_attr($mytext ) . "\">" . esc_html__( 'Instagram account:', 'text_domain' ) . "</label><input class=\"widefat\" id=\"" .  esc_attr( $mytext ) . "\" name=\"" . esc_attr( 'account' ) . "\" type=\"text\" value=\"" .  esc_attr( $text ) . "\" >
+                </p>
+                <p class=\"actions\">
+<input type=\"submit\" value=\"envoyer\"/>
+                        
+                </p></form>";
+	}
+}
+class WPDocs_Map_Widget extends WP_Widget {
+
+	/**
+	 * Constructs the new widget.
+	 *
+	 * @see WP_Widget::__construct()
+	 */
+	function __construct() {
+		// Instantiate the parent object.
+	        parent::__construct(
+                        'my-text',  // Base ID
+                        'My Text'   // Name
+                );
+                #add_action( 'widgets_init', function() {
+                #        register_widget( 'WPDocs_New_Widget' );
+                #});
+	}
+
+
+
+	/**
+	 * The widget's HTML output.
+	 *
+	 * @see WP_Widget::widget()
+	 *
+	 * @param array $args     Display arguments including before_title, after_title,
+	 *                        before_widget, and after_widget.
+	 * @param array $instance The settings for the particular instance of the widget.
+	 */
+	        public $args = array(
+                'before_title'  => '<h4 class="widgettitle">',
+                'after_title'   => '</h4>',
+                'before_widget' => '<div class="widget-wrap">',
+                'after_widget'  => '</div></div>',
+        );
+
+	function widget( $args, $instance ) {
+		echo $args['before_widget'];
+                if ( ! empty( $instance['address'] ) ) {
+                        echo $args['before_title'] . "Carte centrée sur <span id=\"sentaddress\"> " . apply_filters( 'widget_title', $instance['address'] ) . "</span>" . $args['after_title'];
+
+		} else {
+                        echo $args['before_title'] . "chercher une adresse à voir sur la carte " . $args['after_title'];
+                }
+                echo '<div class="formwidget">';
+
+		echo $this->form($instance);
+                echo '</div>';
+                if ( ! empty( $instance['address'] ) ) {
+                    echo '<div class="mapwidget">';
+		    try {
+                    $address = $instance['address'];
+		    $header = array();
+                    $header[] = 'Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5';
+                    $header[] = 'Cache-Control: max-age=0';
+                    $header[] = 'Connection: keep-alive';
+                    $header[] = 'Keep-Alive: 300';
+                    $header[] = 'Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7';
+                    $header[] = 'Accept-Language: fr-FR,en;q=0.5';
+                    $header[] = 'Pragma: ';
+                    $ch = curl_init();
+		    $url = sprintf('http://nominatim.openstreetmap.org/search?q=%s&format=%s&polygon=%s&addressdetails=%s', $address, 'json', '1', '1');
+                    curl_setopt($ch, CURLOPT_URL, $url );
+                    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.0.11) Gecko/2009060215 Firefox/3.0.11 (.NET CLR 3.5.30729)');
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+                    curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                    curl_setopt($ch, CURLOPT_ENCODING, '');
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+                    $instaResult = curl_exec($ch);
+		    //echo "request" . $instaResult;
+		    if ($instaResult == "Bad Request"){
+			            throw new Exception('Third');
+		    }
+
+		   $someinfo= json_decode($instaResult, true)[0];
+		   echo "<div>LAT and LON : " ;
+		echo "<div hidden id=\"chosenaddress\">" . $someinfo["name"] .  "</div>";
+		echo "<div hidden id=\"yourlat\">" . $someinfo["lat"] . "</div>";
+		echo "<div hidden id=\"yourlon\">" . $someinfo["lon"] . "</div>";
+		echo $someinfo["lat"];
+
+		   echo ",";
+		echo $someinfo["lon"];
+		echo " <div id=\"somemap\"></div>";
+		echo "<p> plus d'informations sur ce lieu : " . $someinfo["display_name"] . "</p>";
+		echo "<p> type d'adresse : " . $someinfo["addresstype"] . "</p>";
+                echo '</div>';
+                echo '</div>';
+		    } catch (Exception $e) {
+			    $someinfo =array("lat" => "48.852966", "lon"=> "2.349902", "addresstype"=> "cathédrale ", "display_name"=> "cathédrale Notre-Dame de Paris");
+		   echo "<div>Désolée, une erreur s'est produite, voilà à la place l'emplacement de Paris : LAT and LON : " ;
+		echo "<div hidden id=\"chosenaddress\">Paris</div>";
+		echo "<div hidden id=\"yourlat\">" . $someinfo["lat"] . "</div>";
+		echo "<div hidden id=\"yourlon\">" . $someinfo["lon"] . "</div>";
+		echo $someinfo["lat"];
+
+		   echo ",";
+		echo $someinfo["lon"];
+		echo " <div id=\"somemap\"></div>";
+		echo "<p> plus d'informations sur ce lieu : " . $someinfo["display_name"] . "</p>";
+		echo "<p> type d'adresse : " . $someinfo["addresstype"] . "</p>";
+                echo '</div>';
+                echo '</div>';
+		    }
+                    curl_close ($ch);
+
+
+		    //foreach ($mypizza as $item) {
+		    //        //echo "item";
+		    //        if (str_contains($item, "Photo by")){
+		    //    	    //echo "photo";
+		    //    	    $jsoncontent=explode(">", $item)[1];
+		    //    	    //echo $jsoncontent;
+		    //    	    $jsoncontent1=explode("</script>", $jsoncontent)[0];
+		    //    	    //echo "<code>" . $jsoncontent1 . "</code>";
+		    //    	    //$insta= (array) json_decode($jsoncontent1, true);
+		    //    	    $insta= $jsoncontent1;
+		    //    	    //$pizza=$insta["require"][0][3][0]["__bbox"]["require"][0][3][1]["__bbox"]["result"]["data"]["xig_user_by_username"]["polaris_ordered_timeline_connection"]["edges"];
+
+		    //    	    $array = [
+                    //                    'test1' => [
+                    //                        'foo' => [
+                    //                            'hello' => 123
+                    //                        ]
+                    //                    ],
+                    //                    'test2' => 'bar'
+                    //                ];
+                    //                //echo array_get_nested_value($array, ['test1', 'foo', 'hello']); // will return 123
+                    //                //$pizza1=array_get_nested_value($insta, ["require", 0, 3, 0, "__bbox", "require", 0, 3, 1, "__bbox", "result", "data", "xig_user_by_username", "polaris_ordered_timeline_connection", "edges"]); 
+		    //    	    echo "<h1>LAST POSTS from " . $username . "</h1>";
+		    //    	    //echo json_encode($pizza1, true);
+
+
+		    //$pizza=explode("\"text\":\"", $insta);
+		    //$paspremier=false;
+		    //foreach ($pizza as $part) {
+		    //        if ($paspremier) {
+		    //$mapart=explode("\"}", $part)[0];
+		    //$mypic=explode("uri\":\"", $part)[1];
+		    //$pic=explode("\"", $mypic)[0];
+                    //    //echo "<p class\"ig-post\">". htmlentities(utf8_decode($mapart)) . "</p>";
+
+                    //      $html_utf8 = unenc_utf16_code_units($mapart);
+ 
+                    //    //echo "<p class\"ig-post\">" . utf8_decode($mapart) . "</p>";
+                    //    //echo "<p class\"ig-post\">" . $html_utf8 . "</p>";
+                    //    echo "<p class\"ig-post\">" . str_replace("\\n", "<br>", $html_utf8) . "</p>";
+		    //        }
+		    //        $paspremier=true;
+                    //}
+                    //}
+                    //}
+		    
+		//echo $instaResult;
+                    //#$insta = json_decode($instaResult);
+                    //#$instagram_photos = $insta->graphql->user->edge_owner_to_timeline_media->edges;
+		    //#foreach ($instagram_photos as $value) {
+                    //    echo "<img src=\"" . $value->node->display_url . "\>";
+                    //#}
+                echo '</div>';
+
+		} else {
+			echo "<p>no account</p>";
+		}
+                echo '</div>';
+
+                echo $args['after_widget'];
+
+	
+	}
+
+	/**
+	 * The widget update handler.
+	 *
+	 * @see WP_Widget::update()
+	 *
+	 * @param array $new_instance The new instance of the widget.
+	 * @param array $old_instance The old instance of the widget.
+	 * @return array The updated instance of the widget.
+	 */
+	function update( $new_instance, $old_instance ) {
+                $instance          = array();
+                $instance['address'] = ( ! empty( $new_instance['address'] ) ) ? strip_tags( $new_instance['address'] ) : '';
+                return $instance;
+
+	}
+
+	/**
+	 * Output the admin widget options form HTML.
+	 *
+	 * @param array $instance The current widget settings.
+	 * @return string The HTML markup for the form.
+	 */
+	function form( $instance ) {
+                $text  = ! empty( $instance['address'] ) ? $instance['address'] : esc_html__( '', 'text_domain' );
+		$mytext=$this->get_field_id('address' );
+
+		return "<form action=\"\">
+			<p>
+                        <label for=\"" . esc_attr($mytext ) . "\">" . esc_html__( 'Address to see on the map:', 'text_domain' ) . "</label><input class=\"widefat\" id=\"" .  esc_attr( $mytext ) . "\" name=\"" . esc_attr( 'address' ) . "\" type=\"text\" value=\"" .  esc_attr( $text ) . "\" >
                 </p>
                 <p class=\"actions\">
 <input type=\"submit\" value=\"envoyer\"/>

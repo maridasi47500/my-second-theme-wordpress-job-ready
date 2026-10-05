@@ -113,6 +113,21 @@ $instance['account'] = $_GET['account'];
 
 the_widget( 'WPDocs_IG_Widget', $instance ); ?>
 </div><!-- .widget-section -->
+<div class="widget-section mypost mapwidget">
+widget here : 
+	<?php 
+
+$instance = array();
+                if ( empty( $_GET['address'])  ) {
+$instance['address'] = "paris";
+		} else {
+$instance['address'] = $_GET['address'];
+		}
+
+
+
+the_widget( 'WPDocs_Map_Widget', $instance ); ?>
+</div><!-- .widget-section -->
 <div class="mypost">
 <?php 
 if ( is_user_logged_in() ):
@@ -157,6 +172,30 @@ font-weight:900;
 }
 
 </style>
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+		<script>
+window.onload=function(){
+var mylat=parseFloat(yourlat.innerHTML), mylon=parseFloat(yourlon.innerHTML);
+var map = L.map('somemap').setView([mylat, mylon], 13);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+var marker = L.marker([mylat, mylon]).addTo(map);
+var circle = L.circle([mylat, mylon], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 500
+}).addTo(map);
+var popup = L.popup()
+    .setLatLng([mylat, mylon])
+    .setContent("Carte centrée sur "+document.querySelector("#chosenaddress").innerHTML)
+    .openOn(map);
+}
+		</script>
 
 </body>
 </html>

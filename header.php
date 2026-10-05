@@ -5,12 +5,12 @@
 <title><?php wp_title( '|', true, 'right' ); ?></title>
 <link rel="stylesheet" href="<?php echo esc_url( get_stylesheet_uri() ); ?>" type="text/css" />
 <?php wp_head(); ?>
-<!DOCTYPE html>
-<html lang="en-US" class="no-js">
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
 
-<head>
-        ...
 <style type="text/css" id="custom-background-css">
+#somemap { height: 180px; }
 
 body.custom-background {
   /*background-image: url("/wp-content/themes/my-second-theme/assets/img/terremusique.png");*/
