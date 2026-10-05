@@ -5,7 +5,7 @@
 <?php get_sidebar(); ?>
 <?php wp_list_categories(); ?>
 <div class="widget-section mypost">
-Musical widget here : 
+Musical widget here : Envoie à qui tu veux ce que tu as à lui dire, et ajoute une signature musicale personnalisée
 	<?php 
 
 $instance = array();
@@ -52,7 +52,7 @@ $instance['musicaltext'] = $_GET['musicaltext'];
 the_widget( 'WPDocs_Musical_Widget', $instance ); ?>
 </div><!-- .widget-section -->
 <div class="widget-section mypost">
-widget here : 
+Ici, Envoie à qui tu veux un e-mail simple : 
 	<?php 
 // Source - https://stackoverflow.com/a/12317831
 // Posted by shasi kanth, modified by community. See post 'Timeline' for change history
