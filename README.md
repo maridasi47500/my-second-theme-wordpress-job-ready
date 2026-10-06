@@ -8,7 +8,7 @@
 Bienvenue dans ce thème wordpress
 -
 
-### Dans ce thème, grâce à du code PHP, tu peux :
+### Dans ce thème, tu peux, sans coder :
 - personnaliser les couleurs de liens, des titres, du text, le fond du texte, l'image d'entête
 
 ### Grâce à quelques plugins en bas de page, tu peux :
