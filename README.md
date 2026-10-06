@@ -1,6 +1,27 @@
+# Bienvenue dans voyage et musique :airplane: :musical_note:
+
+- ce repository et les instructions du README sont pour linux :computer:
+- il faut installer Lilypond si tu veux pouvoir envoyer un email avec la fonction de musique ajoutée
+
+Bienvenue dans ce thème wordpress
+-
+
+### Dans ce thème, grâce à du code PHP, tu peux :
+- personnaliser les couleurs de liens, des titres, du text, le fond du texte, l'image d'entête
+
+### Grâce à quelques plugins en bas de page, tu peux :
+- envoyer un email
+- envoyer un email avec une **signature musicale** mystérieuse (des notes de musique sur une portée)
+- bouger le centre de la carte du bas de page
+- explorer le texte des comptes Instagram publics
+
+
 ![alt text](screenshot.png)
 ![alt text](screenshot2.png)
 ![alt text](screenshot1.png)
+
+pour t'aider voici quelques étapes pour avoir le thème disponible sur ton wordpress local :
+- 
 
 - fais cd /srv/www/wordpress/wp-content/themes/ && git clone my-second-theme
 - fais cd /srv/www/wordpress/wp-content/themes/my-second-theme
@@ -11,3 +32,5 @@ define('MYPASSWORD','***************'); in ../../../wp-config.php
 
 
 - fais sudo chown www-data assets/scores/ -R
+
+- bonne visite et surtout, amuse-toi bien
