@@ -1,6 +1,7 @@
 # Bienvenue dans voyage et musique :airplane: :musical_note:
 
-- ce repository et les instructions du README sont pour linux :computer:
+- les instructions du README de ce repository sont pour linux :computer:
+- ce thème fonctionnera peut-être mieux si tu gardes "voyage" et "musique" comme les deux catégories pour classer les articles  du thème
 - il faut installer Lilypond si tu veux pouvoir envoyer un email avec la fonction de musique ajoutée
 
 Bienvenue dans ce thème wordpress
