@@ -1,4 +1,4 @@
-# Bienvenue dans voyage et musique :airplane: :musical_note:
+# Bienvenue dans voyage et musique, le thème classique Wordpress job-ready :airplane: :musical_note:
 
 - les instructions exactes du README de ce repository sont pour linux :computer: mais elles peuvent marcher aussi pour windows ou mac :computer: si tu places bien le plugin pour faire fonctionner le thème
 - ce thème fonctionnera peut-être mieux si tu gardes "voyage" et "musique" comme les deux catégories pour classer les articles  du thème
